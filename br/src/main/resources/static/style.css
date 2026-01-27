@@ -1,0 +1,201 @@
+/* =========================================
+   1. CONFIGURAÇÕES GERAIS (RESET)
+   ========================================= */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f3f4f6; /* Cinza bem clarinho de fundo */
+    color: #1f2937;
+}
+
+button { cursor: pointer; border: none; font-family: inherit; transition: filter 0.2s; }
+button:hover { filter: brightness(0.9); }
+
+/* =========================================
+   2. CABEÇALHO (HEADER)
+   ========================================= */
+header {
+    background-color: #064e3b; /* Verde escuro da Coocacer */
+    color: white;
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-img {
+    height: 50px;
+    background: white;
+    padding: 5px;
+    border-radius: 8px;
+}
+
+h1 { margin: 0; font-size: 1.5rem; font-weight: 800; letter-spacing: -0.5px; }
+.subtitulo-logo { font-size: 0.85rem; opacity: 0.8; font-weight: 400; }
+
+.menu-top { display: flex; align-items: center; gap: 20px; }
+
+.btn-menu {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background 0.2s;
+}
+.btn-menu:hover { background-color: rgba(255,255,255,0.1); }
+
+.btn-sair {
+    background-color: #dc2626;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+/* =========================================
+   3. ÁREA PRINCIPAL (MAIN)
+   ========================================= */
+main {
+    max-width: 1000px; /* Largura centralizada */
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.titulo-secao {
+    color: #111827;
+    border-left: 5px solid #064e3b;
+    padding-left: 15px;
+    margin-bottom: 25px;
+    margin-top: 40px;
+}
+
+/* =========================================
+   4. CARTÃO DE FORMULÁRIO (CADASTRO)
+   ========================================= */
+.form-card {
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    border: 1px solid #e5e7eb;
+}
+
+.input-form {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    font-size: 1rem;
+    box-sizing: border-box; /* Garante que o padding não estoure a largura */
+}
+
+/* =========================================
+   5. LISTA DE VEÍCULOS (ESTILO VERTICAL)
+   ========================================= */
+.frota-container {
+    display: flex;
+    flex-direction: column; /* Um embaixo do outro */
+    gap: 15px;
+}
+
+.card-carro {
+    background: white;
+    border-radius: 8px;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-left: 6px solid #ccc;
+}
+
+.card-carro:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+}
+
+/* Cores de Status */
+.status-disponivel { border-left-color: #10b981; } /* Verde */
+.status-ocupado { border-left-color: #f59e0b; }    /* Laranja */
+.status-manutencao { border-left-color: #ef4444; } /* Vermelho */
+
+/* Texto do Carro */
+.carro-info h3 { margin: 0 0 5px 0; font-size: 1.25rem; color: #1f2937; }
+.carro-dados { font-size: 0.95rem; color: #6b7280; display: flex; gap: 10px; align-items: center; }
+
+/* Botões de Ação */
+.carro-acoes { display: flex; gap: 10px; }
+
+/* =========================================
+   6. BOTÕES MODERNOS
+   ========================================= */
+.btn-moderno {
+    padding: 10px 16px;
+    border-radius: 6px;
+    font-weight: 600;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    font-size: 0.9rem;
+}
+
+.verde { background-color: #10b981; }
+.azul { background-color: #0284c7; }
+.vermelho { background-color: #ef4444; }
+.cinza { background-color: #6b7280; }
+
+/* =========================================
+   7. MODAIS (JANELAS POP-UP)
+   ========================================= */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-box {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 20px 25px rgba(0,0,0,0.2);
+}
+
+.input-modal {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-sizing: border-box;
+}
+
+.modal-buttons { display: flex; gap: 10px; justify-content: flex-end; }
+.btn-cancel { background: #e5e7eb; color: #374151; padding: 10px 20px; border-radius: 6px; font-weight: bold; }
+.btn-confirm { background: #064e3b; color: white; padding: 10px 20px; border-radius: 6px; font-weight: bold; }
+
+/* Responsivo para celular */
+@media (max-width: 768px) {
+    .card-carro { flex-direction: column; align-items: flex-start; gap: 15px; }
+    .carro-acoes { width: 100%; }
+    .carro-acoes button { flex: 1; }
+    header { flex-direction: column; gap: 15px; padding: 15px; }
+    .menu-top { flex-wrap: wrap; justify-content: center; }
+}

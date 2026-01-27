@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Histórico - Coocacer</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+    <style>
+        /* 1. CONFIGURAÇÃO GERAL */
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f3f4f6;
+            margin: 0; color: #1f2937;
+            position: relative; min-height: 100vh;
+        }
+
+        /* MARCA D'ÁGUA */
+        body::before {
+            content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('logo.png'); background-repeat: no-repeat;
+            background-position: center; background-size: 500px; opacity: 0.03;
+            z-index: -1; pointer-events: none; filter: grayscale(100%);
+        }
+
+        /* 2. CABEÇALHO */
+        header { background-color: #064e3b; color: white; padding: 15px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .logo-container { display: flex; align-items: center; gap: 15px; }
+        .logo-img { height: 45px; background: white; padding: 5px; border-radius: 8px; }
+        .btn-voltar { color: white; text-decoration: none; font-weight: bold; background: rgba(255,255,255,0.1); padding: 8px 15px; border-radius: 6px; }
+        .btn-voltar:hover { background: rgba(255,255,255,0.2); }
+        
+        main { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        .titulo-secao { color: #111827; border-left: 5px solid #064e3b; padding-left: 15px; margin-bottom: 25px; }
+
+        /* 3. ÁREA DO FILTRO */
+        .filtro-card {
+            background: rgba(255, 255, 255, 0.9); padding: 20px; border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); margin-bottom: 20px;
+            display: flex; align-items: flex-end; gap: 15px; flex-wrap: wrap;
+            border: 1px solid #e5e7eb; backdrop-filter: blur(5px);
+        }
+        .filtro-group { display: flex; flex-direction: column; gap: 5px; }
+        .filtro-label { font-size: 0.9rem; font-weight: 600; color: #374151; }
+        .filtro-input { padding: 8px; border: 1px solid #d1d5db; border-radius: 6px; font-family: inherit; }
+
+        /* 4. TABELA */
+        .tabela-container { overflow-x: auto; background: white; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; }
+        th { background: #064e3b; color: white; padding: 15px; text-align: left; font-size: 0.9rem; }
+        td { padding: 15px; border-bottom: 1px solid #eee; font-size: 0.9rem; }
+        tr:hover { background-color: #f9fafb; }
+        
+        /* STATUS */
+        .status-badge { padding: 4px 8px; border-radius: 10px; font-weight: bold; font-size: 0.75rem; }
+        .finalizado { background: #dcfce7; color: #166534; }
+        .pendente { background: #fef9c3; color: #854d0e; }
+        .ativo { background: #dbeafe; color: #1e40af; }
+
+        /* BOTÕES */
+        .btn-filtro { background: #0284c7; color: white; padding: 9px 20px; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; }
+        .btn-filtro:hover { background: #0369a1; }
+        
+        .btn-limpar { background: #9ca3af; color: white; padding: 9px 20px; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; }
+        .btn-limpar:hover { background: #6b7280; }
+
+        .btn-pdf { background: #dc2626; color: white; padding: 9px 20px; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 5px;}
+        .btn-pdf:hover { background: #b91c1c; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="logo.png" alt="Logo" class="logo-img" onerror="this.style.display='none'">
+            <div>
+                <h1 style="margin:0; font-size:1.4rem;">HISTÓRICO DE USO</h1>
+                <span style="font-size:0.8rem; opacity:0.9;">Registros de Viagens</span>
+            </div>
+        </div>
+        <div>
+            <a href="index.html" class="btn-voltar">⬅ Voltar ao Início</a>
+        </div>
+    </header>
+
+    <main>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+            <h2 class="titulo-secao" style="margin-bottom:15px;">Registro Geral</h2>
+        </div>
+        
+        <div class="filtro-card">
+            <div class="filtro-group">
+                <label class="filtro-label">Data Início:</label>
+                <input type="date" id="data-inicio" class="filtro-input">
+            </div>
+            <div class="filtro-group">
+                <label class="filtro-label">Data Fim:</label>
+                <input type="date" id="data-fim" class="filtro-input">
+            </div>
+            <button onclick="aplicarFiltro()" class="btn-filtro">🔍 Filtrar</button>
+            <button onclick="limparFiltro()" class="btn-limpar">Limpar</button>
+            
+            <div style="flex:1;"></div>
+            
+            <button onclick="baixarRelatorio()" class="btn-pdf">📄 Baixar Relatório</button>
+        </div>
+
+        <div class="tabela-container">
+            <table id="tabela-historico">
+                <thead>
+                    <tr>
+                        <th>Veículo</th>
+                        <th>Motorista</th>
+                        <th>Saída</th>
+                        <th>Devolução</th>
+                        <th>KM Rodados</th> <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody id="lista-historico">
+                    <tr><td colspan="6" style="text-align:center; padding:20px;">Carregando...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        const API_URL = 'http://localhost:8081/agendamentos'; 
+        
+        let listaCompleta = [];
+        let listaFiltrada = []; // Guarda a lista atual visível para o PDF
+
+        async function carregarHistorico() {
+            try {
+                const resp = await fetch(API_URL);
+                if (!resp.ok) throw new Error("Erro na conexão");
+
+                const dados = await resp.json();
+                
+                // Ordena: Mais recentes primeiro
+                dados.sort((a, b) => new Date(b.dataRetirada) - new Date(a.dataRetirada));
+
+                listaCompleta = dados;
+                listaFiltrada = dados; // Inicialmente, a filtrada é igual a completa
+
+                renderizarTabela(listaCompleta);
+
+            } catch (e) {
+                console.error(e);
+                document.getElementById('lista-historico').innerHTML = 
+                    '<tr><td colspan="6" style="text-align:center; color:red;">Erro ao carregar dados. Verifique o Java.</td></tr>';
+            }
+        }
+
+        function renderizarTabela(lista) {
+            const tbody = document.getElementById('lista-historico');
+            tbody.innerHTML = '';
+
+            if (lista.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align:center; padding:20px;">Nenhum registro encontrado neste período.</td></tr>';
+                return;
+            }
+
+            lista.forEach(item => {
+                const modeloCarro = item.veiculo ? item.veiculo.modelo : '<span style="color:red">Excluído</span>';
+                const placaCarro = item.veiculo ? item.veiculo.placa : '---';
+                const nomeMotorista = item.nomeMotorista || (item.usuario ? item.usuario.nome : 'Desconhecido');
+                
+                const dataSaida = new Date(item.dataRetirada).toLocaleString('pt-BR');
+                const dataVolta = item.dataDevolucao ? new Date(item.dataDevolucao).toLocaleString('pt-BR') : '-';
+                
+                // --- CÁLCULO DE KM RODADOS ---
+                let kmRodadosTexto = '-';
+                let corKm = '#666';
+
+                if (item.kmFinal && item.kmInicial) {
+                    const diferenca = item.kmFinal - item.kmInicial;
+                    kmRodadosTexto = `${diferenca} km`;
+                    corKm = '#111'; // Preto para destacar
+                } else if (item.status === 'EM_USO') {
+                    kmRodadosTexto = 'Em andamento...';
+                    corKm = '#0284c7'; // Azul
+                }
+                // -----------------------------
+
+                let statusHtml = `<span class="status-badge pendente">${item.status}</span>`;
+                if(item.status === 'DEVOLVIDO' || item.status === 'FINALIZADO') statusHtml = `<span class="status-badge finalizado">FINALIZADO</span>`;
+                if(item.status === 'EM_USO' || item.status === 'EM_ANDAMENTO') statusHtml = `<span class="status-badge ativo">EM ANDAMENTO</span>`;
+
+                tbody.innerHTML += `
+                    <tr>
+                        <td><strong>${modeloCarro}</strong><br><small style="color:#666">${placaCarro}</small></td>
+                        <td>${nomeMotorista}</td>
+                        <td>${dataSaida}</td>
+                        <td>${dataVolta}</td>
+                        <td style="color:${corKm}; font-weight:bold;">${kmRodadosTexto}</td>
+                        <td>${statusHtml}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        function aplicarFiltro() {
+            const inicio = document.getElementById('data-inicio').value;
+            const fim = document.getElementById('data-fim').value;
+
+            if (!inicio || !fim) return alert("Selecione as datas Início e Fim.");
+
+            const dataInicio = new Date(inicio + 'T00:00:00');
+            const dataFim = new Date(fim + 'T23:59:59');
+
+            listaFiltrada = listaCompleta.filter(item => {
+                const dataItem = new Date(item.dataRetirada);
+                return dataItem >= dataInicio && dataItem <= dataFim;
+            });
+
+            renderizarTabela(listaFiltrada);
+        }
+
+        function limparFiltro() {
+            document.getElementById('data-inicio').value = '';
+            document.getElementById('data-fim').value = '';
+            listaFiltrada = listaCompleta;
+            renderizarTabela(listaCompleta);
+        }
+
+        // --- FUNÇÃO PARA GERAR PDF (NOVA) ---
+        function baixarRelatorio() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            // Título do PDF
+            doc.setFontSize(18);
+            doc.text("Relatório de Frota - Coocacer", 14, 20);
+            
+            doc.setFontSize(10);
+            const hoje = new Date().toLocaleDateString('pt-BR');
+            doc.text(`Gerado em: ${hoje}`, 14, 28);
+
+            // Gera a tabela baseada no que está visível na tela
+            doc.autoTable({
+                html: '#tabela-historico',
+                startY: 35,
+                theme: 'grid',
+                headStyles: { fillColor: [6, 78, 59] }, // Cor verde do cabeçalho igual ao site
+                styles: { fontSize: 8 }, // Fonte menor para caber tudo
+                columnStyles: {
+                    0: { cellWidth: 35 }, // Veículo
+                    1: { cellWidth: 30 }, // Motorista
+                    4: { fontStyle: 'bold', halign: 'center' } // KM Rodados negrito
+                }
+            });
+
+            // Salva o arquivo
+            doc.save(`Relatorio_Frota_${hoje}.pdf`);
+        }
+
+        carregarHistorico();
+    </script>
+</body>
+</html>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro de Motoristas</title>
+    <link rel="icon" href="logo (2).png">
+    <link rel="stylesheet" href="style.css?v=coocacer">
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <img src="logo.png" alt="Logo" class="logo-img">
+            <h1>Gestão de CNH</h1>
+        </div>
+        <div class="menu-container">
+            <a href="index.html" class="menu-btn">🏠 Voltar ao Início</a>
+        </div>
+    </header>
+
+    <main>
+        <section id="painel-cadastro">
+            <h3>🪪 Novo Motorista</h3>
+            <div class="form-group">
+                <label>Nome Completo:</label>
+                <input type="text" id="mot-nome" placeholder="Ex: João da Silva">
+                
+                <label>Data de Nascimento:</label>
+                <input type="date" id="mot-nasc">
+
+                <label>Número da CNH:</label>
+                <input type="number" id="mot-cnh" placeholder="Apenas números">
+
+                <label>Validade da CNH:</label>
+                <input type="date" id="mot-validade">
+
+                <button onclick="salvarMotorista()" class="btn-moderno verde" style="margin-top:15px; width:100%">💾 Salvar Cadastro</button>
+            </div>
+        </section>
+
+        <h2>Motoristas Cadastrados</h2>
+        <div id="lista-motoristas">
+            <p style="text-align: center; color: #888;">Carregando...</p>
+        </div>
+    </main>
+
+    <script>
+        const API_MOTORISTAS = 'http://localhost:8081/motoristas';
+
+        async function salvarMotorista() {
+            const nome = document.getElementById('mot-nome').value;
+            const nasc = document.getElementById('mot-nasc').value;
+            const cnh = document.getElementById('mot-cnh').value;
+            const validade = document.getElementById('mot-validade').value;
+
+            if(!nome || !nasc || !cnh || !validade) {
+                alert("Preencha todos os campos!");
+                return;
+            }
+
+            try {
+                const resp = await fetch(API_MOTORISTAS, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        nome: nome,
+                        dataNascimento: nasc,
+                        numeroCnh: cnh,
+                        validadeCnh: validade
+                    })
+                });
+
+                if(resp.ok) {
+                    alert("Motorista cadastrado com sucesso!");
+                    limparCampos();
+                    carregarMotoristas();
+                } else {
+                    alert("Erro ao salvar.");
+                }
+            } catch(e) { alert("Erro de conexão."); }
+        }
+
+        async function carregarMotoristas() {
+            const div = document.getElementById('lista-motoristas');
+            div.innerHTML = '';
+            try {
+                const resp = await fetch(API_MOTORISTAS);
+                const lista = await resp.json();
+
+                if(lista.length === 0) {
+                    div.innerHTML = '<p style="text-align:center">Nenhum motorista cadastrado.</p>';
+                    return;
+                }
+
+                lista.forEach(m => {
+                    // Formata a data para BR
+                    const val = new Date(m.validadeCnh).toLocaleDateString('pt-BR', {timeZone: 'UTC'});
+                    
+                    // Verifica se venceu
+                    const hoje = new Date();
+                    const dataVenc = new Date(m.validadeCnh);
+                    let statusCnh = "✅ Em dia";
+                    let cor = "green";
+                    
+                    if(dataVenc < hoje) {
+                        statusCnh = "❌ VENCIDA";
+                        cor = "red";
+                    }
+
+                    div.innerHTML += `
+                        <div class="card-carro borda-verde" style="flex-direction:column; align-items:flex-start;">
+                            <h3>${m.nome}</h3>
+                            <p><strong>CNH:</strong> ${m.numeroCnh}</p>
+                            <p><strong>Validade:</strong> <span style="color:${cor}; font-weight:bold;">${val} (${statusCnh})</span></p>
+                            <button onclick="excluirMotorista(${m.id})" class="btn-moderno vermelho" style="margin-top:10px; padding:5px 10px; font-size:0.8rem;">🗑 Excluir</button>
+                        </div>
+                    `;
+                });
+            } catch(e) { console.error(e); }
+        }
+
+        async function excluirMotorista(id) {
+            if(confirm("Remover este motorista?")) {
+                await fetch(`${API_MOTORISTAS}/${id}`, {method:'DELETE'});
+                carregarMotoristas();
+            }
+        }
+
+        function limparCampos() {
+            document.getElementById('mot-nome').value = '';
+            document.getElementById('mot-nasc').value = '';
+            document.getElementById('mot-cnh').value = '';
+            document.getElementById('mot-validade').value = '';
+        }
+
+        // Inicia carregando a lista
+        carregarMotoristas();
+    </script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Gestão de Frota</title>
+    <link rel="icon" href="logo.png">
+    <link rel="stylesheet" href="login.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <div class="login-container">
+        
+        <div class="login-decor">
+            <div class="decor-content">
+                <img src="logo.png" alt="Logo Coocacer" class="logo-grande">
+                <h2>Coocacer Araguari</h2>
+                <p>Sistema Integrado de Gestão de Frotas</p>
+            </div>
+            <div class="circulo c1"></div>
+            <div class="circulo c2"></div>
+        </div>
+
+        <div class="login-form">
+            <div class="form-header">
+                <h3>Bem-vindo de volta! 👋</h3>
+                <p>Insira suas credenciais para acessar.</p>
+            </div>
+
+            <form id="form-login">
+                <div class="input-group">
+                    <label for="usuario">Usuário / Login</label>
+                    <input type="text" id="usuario" required autocomplete="off">
+                </div>
+
+                <div class="input-group">
+                    <label for="senha">Senha</label>
+                    <input type="password" id="senha" required>
+                </div>
+
+                <button type="submit" class="btn-entrar">
+                    ACESSAR SISTEMA 🚀
+                </button>
+            </form>
+            
+            <p class="footer-login">© 2026 Coocacer Araguari</p>
+        </div>
+
+    </div>
+
+    <script src="login.js"></script>
+</body>
+</html>
