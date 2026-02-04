@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:8081/usuarios';
+const API_URL = '/usuarios';
 
 document.getElementById('form-login').addEventListener('submit', async function(e) {
     e.preventDefault(); // Não deixa a página recarregar
