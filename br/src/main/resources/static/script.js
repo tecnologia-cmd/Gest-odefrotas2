@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:8081'; 
+const API_BASE = ''; 
 const API_VEICULOS = `${API_BASE}/veiculos`;
 const API_AGENDAMENTOS = `${API_BASE}/agendamentos`;
 
